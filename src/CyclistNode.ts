@@ -244,7 +244,6 @@ export class CyclistNode extends Node {
     this.addChild( containerNode );
 
     cyclist.isPointingRightProperty.link( isPointingRight => {
-      console.log( isPointingRight );
       containerNode.matrix = isPointingRight ? Matrix3.X_REFLECTION : Matrix3.IDENTITY;
     } );
   }

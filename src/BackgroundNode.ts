@@ -1,7 +1,74 @@
 import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
 import { Bounds2, DotUtils } from 'scenerystack/dot';
 import { Shape } from 'scenerystack/kite';
-import { Circle, LinearGradient, Node, Path, Rectangle } from 'scenerystack/scenery';
+import { Image, LinearGradient, Node, Path, Rectangle } from 'scenerystack/scenery';
+import tree1URL from '../images/tree1.svg';
+import tree2URL from '../images/tree2.svg';
+import { loadImage } from './loadImage.js';
+import { Pool, TPoolable } from 'scenerystack/phet-core';
+
+const tree1Image = loadImage( tree1URL );
+const tree2Image = loadImage( tree2URL );
+
+class TreeImage1 extends Node implements TPoolable {
+  public constructor( x: number, y: number, depth: number ) {
+    super( {
+      children: [
+        new Image( tree1Image, {
+          y: -125
+        } )
+      ],
+    } );
+
+    this.initialize( x, y, depth );
+  }
+
+  public initialize( x: number, y: number, depth: number ): this {
+    this.setScaleMagnitude( 200 / depth );
+    this.centerX = x;
+    this.y = y;
+
+    return this;
+  }
+
+  public freeToPool(): void {
+    TreeImage1.pool.freeToPool( this );
+  }
+
+  public static readonly pool = new Pool( TreeImage1, {
+    initialize: TreeImage1.prototype.initialize
+  } );
+}
+
+class TreeImage2 extends Node implements TPoolable {
+  public constructor( x: number, y: number, depth: number ) {
+    super( {
+      children: [
+        new Image( tree2Image, {
+          y: -138
+        } )
+      ],
+    } );
+
+    this.initialize( x, y, depth );
+  }
+
+  public initialize( x: number, y: number, depth: number ): this {
+    this.setScaleMagnitude( 300 / depth );
+    this.centerX = x;
+    this.y = y;
+
+    return this;
+  }
+
+  public freeToPool(): void {
+    TreeImage2.pool.freeToPool( this );
+  }
+
+  public static readonly pool = new Pool( TreeImage2, {
+    initialize: TreeImage2.prototype.initialize
+  } );
+}
 
 export class BackgroundNode extends Node {
   public constructor(
@@ -26,9 +93,18 @@ export class BackgroundNode extends Node {
       ]
     } );
 
+    // TODO: is hash function causing flickering?
+    // const hashTreeSquare = ( x: number, y: number ) => {
+    //   console.log( x, y );
+    //   const seed = ( ( x + 102.516 ) * 73856093 ) ^ ( ( y * 2.1 - 15.2 ) * 19349663 );
+    //   return ( Math.abs( seed ) % 100 ) / 100;
+    // };
     const hashTreeSquare = ( x: number, y: number ) => {
-      const seed = ( ( x + 102.516 ) * 73856093 ) ^ ( ( y * 2.1 - 15.2 ) * 19349663 );
-      return ( Math.abs( seed ) % 100 ) / 100;
+      let seed = ( x * 73856093 ) ^ ( y * 19349663 );
+      seed ^= seed >> 13;
+      seed *= 0x85ebca6b;
+      seed ^= seed >> 16;
+      return ((seed >>> 0) % 100) / 100;  // Force unsigned integer
     };
 
     const getTreesInViewport = (
@@ -46,7 +122,9 @@ export class BackgroundNode extends Node {
 
       // TODO
       const nearY = 4;
-      const farY = 410;
+      // const farY = 410;
+      const farY = 700;
+      // const farY = 1400;
 
       // x: screen space, y: 0 (close) to 1 (far)
       const trees: { x: number; y: number; depth: number; type: number }[] = [];
@@ -96,8 +174,8 @@ export class BackgroundNode extends Node {
       const horizonRatio = 0.67;
 
       const roadBottomY = mapY( 0.19 );
-      const roadCenterLowY = mapY( 0.33 );
-      const roadCenterHighY = mapY( 0.34 );
+      const roadCenterLowY = mapY( 0.34 );
+      const roadCenterHighY = mapY( 0.35 );
       const roadTopY = mapY( 0.48 );
       const treeStartY = mapY( 0.53 );
       const horizon = mapY( horizonRatio );
@@ -111,7 +189,7 @@ export class BackgroundNode extends Node {
         .addColorStop( 0.12, '#D6D6D6' )
         .addColorStop( 0.12, '#555' )
 
-        .addColorStop( 0.4, '#777' )
+        .addColorStop( 0.6, '#777' )
 
         .addColorStop( 0.92, '#555' )
         .addColorStop( 0.92, '#D6D6D6' )
@@ -165,19 +243,28 @@ export class BackgroundNode extends Node {
 
       const trees = getTreesInViewport( position, ( rightSafeX - leftSafeX ), 1.1 * bounds.width );
 
+      // Clear children and move them to the pool
+      treeContainer.children.forEach( child => {
+        ( child as unknown as TPoolable ).freeToPool();
+      } );
       treeContainer.removeAllChildren();
-      for ( const tree of trees ) {
 
+      const children: Node[] = [];
+
+      // TODO: use sprites(!) - maybe this will help with flickering issue with SVG
+      for ( const tree of trees ) {
         const padding = 200;
 
         if ( tree.x > bounds.left - padding && tree.x < bounds.right + padding ) {
-          treeContainer.addChild( new Circle( 700 / tree.depth, {
-            x: tree.x,
-            y: horizon * tree.y + treeStartY * ( 1 - tree.y ),
-            fill: tree.type === 0 ? 'black' : 'red'
-          } ) );
+          const pool = tree.type === 0 ? TreeImage1.pool : TreeImage2.pool;
+
+          children.push( pool.create( tree.x, horizon * tree.y + treeStartY * ( 1 - tree.y ), tree.depth ) );
         }
       }
+
+      children.sort( ( a, b ) => { return a.y - b.y; } );
+
+      treeContainer.children = children;
     } );
   }
 }
