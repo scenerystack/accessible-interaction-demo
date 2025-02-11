@@ -77,4 +77,6 @@ asyncLoader.addListener( () => {
 
     model.step( dt );
   });
+
+  // display.setPointerAreaDisplayVisible( true );
 } );

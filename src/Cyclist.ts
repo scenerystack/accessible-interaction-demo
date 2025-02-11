@@ -5,4 +5,5 @@ export class Cyclist {
   public readonly wheelAngleProperty = new NumberProperty( 0 );
   public readonly crankAngleProperty = new NumberProperty( 0 );
   public readonly effortProperty = new NumberProperty( 0 ); // 0 to 3
+  public readonly bicycleColorShiftProperty = new NumberProperty( 0 );
 }

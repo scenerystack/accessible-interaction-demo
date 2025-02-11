@@ -1,4 +1,4 @@
-import { Image, Node, NodeOptions } from 'scenerystack/scenery';
+import { HueRotate, Image, Node, NodeOptions } from 'scenerystack/scenery';
 import bicycleFrameURL from '../images/bicycleFrame.png';
 import bicycleGearURL from '../images/bicycleGear.png';
 import bicycleSpokesURL from '../images/bicycleSpokes.png';
@@ -109,19 +109,6 @@ const BICYCLE_SYSTEM_RIGHT_OFFSET = 123;
 const BICYCLE_SYSTEM_TOP_OFFSET = -249;
 const IMAGE_SCALE = 0.490; // scale factor used to size the images, empirically determined
 
-const REAR_WHEEL_RADIUS = 0.021; // In meters, must be worked out with the image.
-
-// offsets used for creating energy chunk paths and rotating images - these need to be coordinated with the images
-const BIKER_BUTTOCKS_OFFSET = new Vector2( 0.02, 0.04 );
-const TOP_TUBE_ABOVE_CRANK_OFFSET = new Vector2( 0.007, 0.015 );
-const BIKE_CRANK_OFFSET = new Vector2( 0.0052, -0.002 );
-const CENTER_OF_GEAR_OFFSET = new Vector2( 0.0058, -0.006 );
-const CENTER_OF_BACK_WHEEL_OFFSET = new Vector2( 0.035, -0.01 );
-const UPPER_CENTER_OF_BACK_WHEEL_OFFSET = new Vector2( 0.035, -0.006 ); // where the top chain meets the back wheel cassette
-const TOP_TANGENT_OF_BACK_WHEEL_OFFSET = new Vector2( 0.024, 0.007 );
-const NEXT_ENERGY_SYSTEM_OFFSET = new Vector2( 0.107, 0.066 );
-const CHEMICAL_ENERGY_CHUNK_OFFSETS = [ BIKER_BUTTOCKS_OFFSET, TOP_TUBE_ABOVE_CRANK_OFFSET ];
-
 export type CyclistNodeOptions = NodeOptions;
 
 export class CyclistNode extends Node {
@@ -133,6 +120,10 @@ export class CyclistNode extends Node {
       top: BICYCLE_SYSTEM_TOP_OFFSET,
       scale: IMAGE_SCALE
     } );
+    cyclist.bicycleColorShiftProperty.link( colorShift => {
+      frameNode.filters = colorShift === 0 ? [] : [ new HueRotate( colorShift ) ];
+    } );
+
     const gearNode = new Image( bicycleGearImage, {
       center: GEAR_OFFSET,
       scale: IMAGE_SCALE
