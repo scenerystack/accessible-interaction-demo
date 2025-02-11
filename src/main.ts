@@ -5,6 +5,8 @@ import { asyncLoader, platform } from "scenerystack/phet-core";
 import { Display, Node, Rectangle, Text } from "scenerystack/scenery";
 import { CyclistNode } from './CyclistNode.js';
 import { Cyclist } from "./Cyclist.js";
+import { Model } from './Model.js';
+import { View } from './View.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -62,29 +64,10 @@ resize();
 
 // Wait for images to complete loading
 asyncLoader.addListener( () => {
-  const cyclist = new Cyclist();
+  const model = new Model();
+  const view = new View( model, layoutBoundsProperty );
 
-  cyclist.effortProperty.value = 0;
-
-  const cyclistNode = new CyclistNode( cyclist );
-  const cyclistOffset = cyclistNode.bottom;
-  cyclistNode.y = -cyclistOffset;
-
-  const containerNode = new Node( {
-    children: [
-      cyclistNode
-    ]
-  } );
-
-  rootNode.addChild( containerNode );
-
-  // Center the text and the rectangle dynamically
-  layoutBoundsProperty.link((bounds) => {
-    const scale = bounds.height / 500;
-    containerNode.setScaleMagnitude( bounds.height / 500 );
-    containerNode.y = ( bounds.top + 3 * bounds.bottom ) / 4;
-    cyclistNode.centerX = bounds.centerX / scale;
-  });
+  rootNode.addChild( view );
 
   // Frame step logic
   display.updateOnRequestAnimationFrame((dt) => {
@@ -92,7 +75,6 @@ asyncLoader.addListener( () => {
       resize();
     }
 
-    cyclist.wheelAngleProperty.value += 1 * dt;
-    cyclist.crankAngleProperty.value += 5 * dt;
+    model.step( dt );
   });
 } );

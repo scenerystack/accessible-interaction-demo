@@ -1,4 +1,4 @@
-import { BooleanProperty, NumberProperty } from "scenerystack/axon";
+import { BooleanProperty, NumberProperty } from 'scenerystack/axon';
 
 export class Cyclist {
   public readonly isPointingRightProperty = new BooleanProperty( true );
