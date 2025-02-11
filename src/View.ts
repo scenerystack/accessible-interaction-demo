@@ -1,10 +1,9 @@
-import { HBox, Node, Text, VBox } from 'scenerystack/scenery';
+import { Font, HBox, Node, Text, VBox } from 'scenerystack/scenery';
 import { Model } from './Model';
 import { CyclistNode } from './CyclistNode';
 import { TReadOnlyProperty } from 'scenerystack/axon';
 import { Bounds2, Dimension2, Range } from 'scenerystack/dot';
-import { HSlider, Panel } from 'scenerystack/sun';
-import { ResetAllButton } from 'scenerystack/scenery-phet';
+import { HSlider, Panel, TextPushButton } from 'scenerystack/sun';
 import { BackgroundNode } from './BackgroundNode.js';
 
 export class View extends Node {
@@ -40,15 +39,16 @@ export class View extends Node {
       ]
     } );
 
-    const resetAllButton = new ResetAllButton( {
-      listener: () => model.reset()
+    const stopButton = new TextPushButton( 'Stop', {
+      font: Font.fromCSS( '20px Arial' ),
+      listener: () => model.stop()
     } );
 
     const controlsNode = new Panel( new HBox( {
       spacing: 50,
       children: [
         accelerationNode,
-        resetAllButton
+        stopButton
       ]
     } ), {
       top: cyclistNode.bottom + 40,

@@ -3,7 +3,7 @@ import { Cyclist } from './Cyclist.js';
 
 export class Model {
 
-  public readonly positionProperty = new NumberProperty( 0 );
+  public readonly positionProperty = new NumberProperty( 300 );
   public readonly velocityProperty = new NumberProperty( 0 );
   public readonly accelerationProperty = new NumberProperty( 0 );
 
@@ -49,6 +49,11 @@ export class Model {
     else {
       this.cyclist.effortProperty.value = 3;
     }
+  }
+
+  public stop(): void {
+    this.velocityProperty.value = 0;
+    this.accelerationProperty.value = 0;
   }
 
   public reset(): void {
