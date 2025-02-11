@@ -146,11 +146,12 @@ export class BackgroundNode extends Node {
             hashValue = hashValue / probabilityOfTree;
 
             const jitteredX = x + 0.8 * ( hashValue - 0.5 ) * gridX;
+            const jitteredY = y + 0.8 * ( ( hashValue * 100 ) % 1 ) * gridY;
 
             const screenX = ( jitteredX - camX ) / width * viewportWidth + viewportWidth / 2;
 
             const k = 0.01;
-            const screenY = 1 - ( 1 / ( 1 + k * ( y - nearY ) ) );
+            const screenY = 1 - ( 1 / ( 1 + k * ( jitteredY - nearY ) ) );
 
             trees.push( {
               x: screenX,
@@ -174,7 +175,7 @@ export class BackgroundNode extends Node {
       const horizonRatio = 0.67;
 
       const roadBottomY = mapY( 0.19 );
-      const roadCenterLowY = mapY( 0.34 );
+      const roadCenterLowY = mapY( 0.343 );
       const roadCenterHighY = mapY( 0.35 );
       const roadTopY = mapY( 0.48 );
       const treeStartY = mapY( 0.53 );
@@ -203,6 +204,7 @@ export class BackgroundNode extends Node {
         .addColorStop( 0, '#3F8F3D' )
         .addColorStop( horizonRatio, '#88C57A' )
         .addColorStop( horizonRatio, '#cfecfc' )
+        // .addColorStop( 1, '#0099CC' );
         .addColorStop( 1, '#02ace4' );
 
       const midX = bounds.centerX;
@@ -218,7 +220,7 @@ export class BackgroundNode extends Node {
       };
 
       const stripeLength = 1;
-      const stripeSpacing = 2.5;
+      const stripeSpacing = 3;
       const scale = bounds.height * 0.08;
 
       const mapRoadX = ( x: number ) => {
@@ -252,6 +254,7 @@ export class BackgroundNode extends Node {
       const children: Node[] = [];
 
       // TODO: use sprites(!) - maybe this will help with flickering issue with SVG
+      // TODO: if we want to increase clarity, could add TREE SHADOWS (just a blurred darkness)
       for ( const tree of trees ) {
         const padding = 200;
 
