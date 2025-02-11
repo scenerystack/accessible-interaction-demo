@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Trunk -->
+  <rect x="90" y="180" width="20" height="50" fill="#7B4F2F"/>
+
+  <!-- Layered Pine Foliage -->
+  <polygon points="50,180 100,110 150,180" fill="#3F8F3D"/>
+  <polygon points="60,150 100,80 140,150" fill="#4F9F42"/>
+  <polygon points="70,120 100,50 130,120" fill="#88C57A"/>
+</svg>

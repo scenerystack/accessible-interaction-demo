@@ -1,0 +1,14 @@
+<svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Trunk -->
+  <rect x="85" y="130" width="30" height="80" fill="#7B4F2F" />
+
+  <!-- Leaves (Bottom) -->
+  <circle cx="100" cy="120" r="45" fill="#3F8F3D"/>
+
+  <!-- Leaves (Middle) -->
+  <circle cx="80" cy="90" r="40" fill="#4F9F42"/>
+  <circle cx="120" cy="90" r="40" fill="#4F9F42"/>
+
+  <!-- Leaves (Top) -->
+  <circle cx="100" cy="60" r="35" fill="#88C57A"/>
+</svg>

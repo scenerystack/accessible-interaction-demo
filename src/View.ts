@@ -3,7 +3,7 @@ import { Model } from './Model';
 import { CyclistNode } from './CyclistNode';
 import { TReadOnlyProperty } from 'scenerystack/axon';
 import { Bounds2, Dimension2, Range } from 'scenerystack/dot';
-import { HSlider } from 'scenerystack/sun';
+import { HSlider, Panel } from 'scenerystack/sun';
 import { ResetAllButton } from 'scenerystack/scenery-phet';
 import { BackgroundNode } from './BackgroundNode.js';
 
@@ -44,13 +44,15 @@ export class View extends Node {
       listener: () => model.reset()
     } );
 
-    const controlsNode = new HBox( {
+    const controlsNode = new Panel( new HBox( {
       spacing: 50,
-      top: cyclistNode.bottom + 40,
       children: [
         accelerationNode,
         resetAllButton
       ]
+    } ), {
+      top: cyclistNode.bottom + 40,
+      xMargin: 20
     } );
 
     const containerNode = new Node( {
