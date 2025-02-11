@@ -1,10 +1,14 @@
 import { Font, HBox, Node, Text, VBox } from 'scenerystack/scenery';
 import { Model } from './Model';
 import { CyclistNode } from './CyclistNode';
-import { TReadOnlyProperty } from 'scenerystack/axon';
-import { Bounds2, Dimension2, Range } from 'scenerystack/dot';
+import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
+import { Bounds2, Dimension2, DotUtils, Range } from 'scenerystack/dot';
 import { HSlider, Panel, TextPushButton, VerticalAquaRadioButtonGroup } from 'scenerystack/sun';
 import { BackgroundNode } from './BackgroundNode.js';
+
+const BLUE_COLOR_SHIFT = 0;
+const GREEN_COLOR_SHIFT = 4;
+const RED_COLOR_SHIFT = 2.3;
 
 export class View extends Node {
   public constructor(
@@ -34,7 +38,52 @@ export class View extends Node {
       labelContent: 'Cyclist'
     } );
 
-    cyclistNode.innerContent = 'Dynamic content here'; // TODO
+    new Multilink( [
+      model.cyclist.isPointingRightProperty,
+      model.cyclist.bicycleColorShiftProperty,
+      model.cyclist.effortProperty,
+      model.velocityProperty,
+      model.accelerationProperty
+    ], ( isPointingRight, bicycleColorShift, effort, velocity, acceleration ) => {
+
+      const color = {
+        [ BLUE_COLOR_SHIFT ]: 'blue',
+        [ GREEN_COLOR_SHIFT ]: 'green',
+        [ RED_COLOR_SHIFT ]: 'red'
+      }[ bicycleColorShift ];
+
+      const direction = isPointingRight ? 'right' : 'left';
+
+      const braking = velocity * acceleration < 0;
+
+      const effortString = braking ? 'braking' : Math.abs( acceleration ) < 1e-5 ? 'coasting' : {
+        0: 'pedaling lightly',
+        1: 'pedaling moderately',
+        2: 'pedaling hard',
+        3: 'pedaling very hard'
+      }[ effort ];
+
+      let velocityString: string;
+      const speed = Math.abs( velocity );
+
+      if ( speed < 1e-5 ) {
+        velocityString = 'stationary';
+      }
+      else if ( speed < 5 ) {
+        velocityString = 'moving slowly';
+      }
+      else if ( speed < 13 ) {
+        velocityString = 'moving at a moderate speed';
+      }
+      else if ( speed < 25 ) {
+        velocityString = 'moving quickly';
+      }
+      else {
+        velocityString = 'moving very quickly';
+      }
+
+      cyclistNode.innerContent = `The cyclist is on a ${color} bicycle pointing to the ${direction}. ${speed > 1e-5 ? `The cyclist is ${effortString}. ` : ''}The cyclist is ${velocityString}`;
+    } );
 
     const accelerationSliderLabel = new Text( 'Acceleration', {
       font: 'bold 18px Arial'
@@ -44,7 +93,8 @@ export class View extends Node {
       trackSize: new Dimension2( 200, 5 ),
       thumbTouchAreaYDilation: 7,
       accessibleName: 'Acceleration',
-      helpText: 'Adjust the acceleration of the cyclist'
+      helpText: 'Adjust the acceleration of the cyclist',
+      pdomCreateAriaValueText: value => `${DotUtils.toFixed( value / 2, 1 )} meters per second squared`
     } );
 
     accelerationSlider.addMinorTick( -3 );
@@ -53,7 +103,11 @@ export class View extends Node {
 
     const stopButton = new TextPushButton( 'Stop', {
       font: Font.fromCSS( '20px Arial' ),
-      listener: () => model.stop(),
+      listener: () => {
+        model.stop();
+
+        stopButton.alertDescriptionUtterance( 'The cyclist has stopped' );
+      },
       accessibleName: 'Stop',
       helpText: 'Stop all motion of the cyclist'
     } );
@@ -67,15 +121,15 @@ export class View extends Node {
     };
     const bicycleColorRadioButtonGroup = new VerticalAquaRadioButtonGroup( model.cyclist.bicycleColorShiftProperty, [
       {
-        value: 0,
+        value: BLUE_COLOR_SHIFT,
         createNode: () => new Text( 'Blue', bicycleColorTextOptions )
       },
       {
-        value: 4,
+        value: GREEN_COLOR_SHIFT,
         createNode: () => new Text( 'Green', bicycleColorTextOptions )
       },
       {
-        value: 2.3,
+        value: RED_COLOR_SHIFT,
         createNode: () => new Text( 'Red', bicycleColorTextOptions )
       }
     ], {
