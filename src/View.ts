@@ -5,6 +5,7 @@ import { TReadOnlyProperty } from 'scenerystack/axon';
 import { Bounds2, Dimension2, Range } from 'scenerystack/dot';
 import { HSlider } from 'scenerystack/sun';
 import { ResetAllButton } from 'scenerystack/scenery-phet';
+import { BackgroundNode } from './BackgroundNode.js';
 
 export class View extends Node {
   public constructor(
@@ -12,6 +13,8 @@ export class View extends Node {
     layoutBoundsProperty: TReadOnlyProperty<Bounds2>
   ) {
     super();
+
+    const backgroundNode = new BackgroundNode( model.positionProperty, layoutBoundsProperty );
 
     const cyclistNode = new CyclistNode( model.cyclist );
     const cyclistOffset = cyclistNode.bottom;
@@ -57,7 +60,10 @@ export class View extends Node {
       ]
     } );
 
-    this.addChild( containerNode );
+    this.children = [
+      backgroundNode,
+      containerNode
+    ];
 
     // Center the text and the rectangle dynamically
     layoutBoundsProperty.link( ( bounds ) => {

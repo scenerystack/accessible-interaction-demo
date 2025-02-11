@@ -58,6 +58,7 @@ export class Model {
 
     this.cyclist.wheelAngleProperty.reset();
     this.cyclist.crankAngleProperty.reset();
+    this.cyclist.isPointingRightProperty.reset();
 
     this.step( 0 );
   }
