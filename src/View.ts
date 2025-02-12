@@ -32,6 +32,10 @@ export class View extends Node {
     const cyclistOffset = cyclistNode.bottom;
     cyclistNode.y = -cyclistOffset;
 
+    model.cyclist.isPointingRightProperty.lazyLink( isPointingRight => {
+      cyclistNode.alertDescriptionUtterance( `The cyclist is now pointing to the ${isPointingRight ? 'right' : 'left'}` );
+    } );
+
     cyclistNode.mutate( {
       tagName: 'p',
       labelTagName: 'h2',
