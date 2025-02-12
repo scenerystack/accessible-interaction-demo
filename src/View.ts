@@ -5,10 +5,7 @@ import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
 import { Bounds2, Dimension2, DotUtils, Range } from 'scenerystack/dot';
 import { HSlider, Panel, TextPushButton, VerticalAquaRadioButtonGroup } from 'scenerystack/sun';
 import { BackgroundNode } from './BackgroundNode.js';
-
-const BLUE_COLOR_SHIFT = 0;
-const GREEN_COLOR_SHIFT = 4;
-const RED_COLOR_SHIFT = 2.3;
+import { BLUE_COLOR_SHIFT, GREEN_COLOR_SHIFT, RED_COLOR_SHIFT } from './Cyclist.js';
 
 export class View extends Node {
   public constructor(

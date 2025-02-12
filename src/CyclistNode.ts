@@ -1,4 +1,4 @@
-import { HueRotate, Image, Node, NodeOptions } from 'scenerystack/scenery';
+import { FireListener, HueRotate, Image, InteractiveHighlighting, Node, NodeOptions } from 'scenerystack/scenery';
 import bicycleFrameURL from '../images/bicycleFrame.png';
 import bicycleGearURL from '../images/bicycleGear.png';
 import bicycleSpokesURL from '../images/bicycleSpokes.png';
@@ -115,10 +115,16 @@ export class CyclistNode extends Node {
   public constructor( public readonly cyclist: Cyclist, options?: CyclistNodeOptions ) {
     super( options );
 
-    const frameNode = new Image( bicycleFrameImage, {
+    const frameNode = new ( InteractiveHighlighting( Image ) )( bicycleFrameImage, {
       right: BICYCLE_SYSTEM_RIGHT_OFFSET,
       top: BICYCLE_SYSTEM_TOP_OFFSET,
-      scale: IMAGE_SCALE
+      scale: IMAGE_SCALE,
+      cursor: 'pointer',
+      inputListeners: [
+        new FireListener( {
+          fire: () => cyclist.toggleToNextColorShift()
+        } )
+      ]
     } );
     cyclist.bicycleColorShiftProperty.link( colorShift => {
       frameNode.filters = colorShift === 0 ? [] : [ new HueRotate( colorShift ) ];

@@ -1,5 +1,5 @@
 import { enableAssert } from "scenerystack/assert";
-import { Property } from "scenerystack/axon";
+import { BooleanProperty, Property } from "scenerystack/axon";
 import { Bounds2 } from "scenerystack/dot";
 import { asyncLoader, platform } from "scenerystack/phet-core";
 import { Display, Node, Rectangle, Text } from "scenerystack/scenery";
@@ -31,6 +31,7 @@ const display = new Display(rootNode, {
   backgroundColor: "#eee",
   listenToOnlyElement: false,
   assumeFullWindow: true,
+  interactiveHighlightsEnabledProperty: new BooleanProperty( true )
 });
 
 // We'll add the automatically-created DOM element to the body.
