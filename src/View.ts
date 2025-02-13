@@ -1,4 +1,4 @@
-import { Font, HBox, Node, Text, VBox } from 'scenerystack/scenery';
+import { AnimatedPanZoomListener, Font, HBox, Node, Text, VBox } from 'scenerystack/scenery';
 import { Model } from './Model';
 import { CyclistNode } from './CyclistNode';
 import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
@@ -181,6 +181,12 @@ export class View extends Node {
       containerNode
     ];
 
+    const zoomListener = new AnimatedPanZoomListener( this, {
+      maxScale: 10
+    } );
+
+    this.addInputListener( zoomListener );
+
     // Center the text and the rectangle dynamically
     layoutBoundsProperty.link( ( bounds ) => {
       const scale = bounds.height / 500;
@@ -188,6 +194,9 @@ export class View extends Node {
       containerNode.y = ( bounds.top + 3 * bounds.bottom ) / 4;
       cyclistNode.centerX = bounds.centerX / scale;
       controlsNode.centerX = bounds.centerX / scale;
+
+      zoomListener.setTargetBounds( bounds );
+      zoomListener.setPanBounds( bounds );
     } );
   }
 }
