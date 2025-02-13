@@ -94,7 +94,7 @@ export class View extends Node {
       trackSize: new Dimension2( 200, 5 ),
       thumbTouchAreaYDilation: 7,
       accessibleName: 'Acceleration',
-      helpText: 'Adjust the acceleration of the cyclist',
+      accessibleHelpText: 'Adjust the acceleration of the cyclist',
       pdomCreateAriaValueText: value => `${DotUtils.toFixed( value / 2, 1 )} meters per second squared`
     } );
 
@@ -110,7 +110,7 @@ export class View extends Node {
         stopButton.alertDescriptionUtterance( 'The cyclist has stopped' );
       },
       accessibleName: 'Stop',
-      helpText: 'Stop all motion of the cyclist'
+      accessibleHelpText: 'Stop all motion of the cyclist'
     } );
 
     const bicycleColorLabelNode = new Text( 'Bicycle Color', {
@@ -137,7 +137,7 @@ export class View extends Node {
       labelTagName: 'h3',
       accessibleName: 'Bicycle Color',
       touchAreaXDilation: 20,
-      helpText: 'Change the color of the bicycle'
+      accessibleHelpText: 'Change the color of the bicycle'
     } );
 
     const controlsNode = new Panel( new HBox( {
