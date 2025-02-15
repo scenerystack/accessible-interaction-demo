@@ -43,7 +43,7 @@ import cyclistLegFront16URL from '../images/cyclistLegFront16.png';
 import cyclistLegFront17URL from '../images/cyclistLegFront17.png';
 import cyclistLegFront18URL from '../images/cyclistLegFront18.png';
 
-import { DotUtils, Matrix3, Vector2 } from 'scenerystack/dot';
+import { Matrix3, moduloBetweenDown, Vector2 } from 'scenerystack/dot';
 import { loadImage } from './loadImage.js';
 import { Cyclist } from './Cyclist.js';
 
@@ -189,7 +189,7 @@ export class CyclistNode extends Node {
     let visibleFrontLeg = frontLegNodes[ 0 ];
     const gearRotationPoint = gearNode.bounds.center;
     cyclist.crankAngleProperty.link( angle => {
-      angle = DotUtils.moduloBetweenDown( angle, 0, 2 * Math.PI );
+      angle = moduloBetweenDown( angle, 0, 2 * Math.PI );
 
       const i = CyclistNode.mapAngleToImageIndex( angle );
       visibleFrontLeg.setVisible( false );
@@ -217,7 +217,7 @@ export class CyclistNode extends Node {
     const frontWheelRotationPoint = frontSpokesNode.bounds.center;
     const rearWheelRotationPoint = rearSpokesNode.bounds.center;
     cyclist.wheelAngleProperty.link( angle => {
-      angle = DotUtils.moduloBetweenDown( angle, 0, 2 * Math.PI );
+      angle = moduloBetweenDown( angle, 0, 2 * Math.PI );
 
       // Scenery doesn't use the convention in physics where a positive rotation is counter-clockwise, so we have to
       // invert the angle in the following calculation.
@@ -246,7 +246,7 @@ export class CyclistNode extends Node {
   }
 
   public static mapAngleToImageIndex( angle: number ) {
-    angle = DotUtils.moduloBetweenDown( angle, 0, 2 * Math.PI );
+    angle = moduloBetweenDown( angle, 0, 2 * Math.PI );
 
     return Math.floor( ( angle % ( 2 * Math.PI ) ) / ( 2 * Math.PI / NUMBER_OF_LEG_IMAGES ) );
   }

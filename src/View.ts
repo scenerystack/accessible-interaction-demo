@@ -2,7 +2,7 @@ import { AnimatedPanZoomListener, Font, HBox, Node, Text, VBox } from 'sceneryst
 import { Model } from './Model';
 import { CyclistNode } from './CyclistNode';
 import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
-import { Bounds2, Dimension2, DotUtils, Range } from 'scenerystack/dot';
+import { Bounds2, Dimension2, Range, toFixed } from 'scenerystack/dot';
 import { HSlider, Panel, TextPushButton, VerticalAquaRadioButtonGroup } from 'scenerystack/sun';
 import { BackgroundNode } from './BackgroundNode.js';
 import { BLUE_COLOR_SHIFT, GREEN_COLOR_SHIFT, RED_COLOR_SHIFT } from './Cyclist.js';
@@ -95,7 +95,7 @@ export class View extends Node {
       thumbTouchAreaYDilation: 7,
       accessibleName: 'Acceleration',
       accessibleHelpText: 'Adjust the acceleration of the cyclist',
-      pdomCreateAriaValueText: value => `${DotUtils.toFixed( value / 2, 1 )} meters per second squared`
+      pdomCreateAriaValueText: value => `${toFixed( value / 2, 1 )} meters per second squared`
     } );
 
     accelerationSlider.addMinorTick( -3 );

@@ -1,5 +1,5 @@
 import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
-import { Bounds2, DotUtils } from 'scenerystack/dot';
+import { Bounds2, linear } from 'scenerystack/dot';
 import { Shape } from 'scenerystack/kite';
 import { Image, LinearGradient, Node, Path, Rectangle } from 'scenerystack/scenery';
 import tree1URL from '../images/tree1.svg';
@@ -131,7 +131,7 @@ export class BackgroundNode extends Node {
 
       for ( let depth = nearY - camY; depth < farY - camY; depth += gridY ) {
         const y = camY + depth;
-        const width = DotUtils.linear( camY, 0, 0, zeroWidth, y );
+        const width = linear( camY, 0, 0, zeroWidth, y );
 
         const padding = 2;
 
