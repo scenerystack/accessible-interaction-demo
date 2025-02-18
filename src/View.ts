@@ -103,19 +103,11 @@ export class View extends Node {
       accessibleHelpText: 'Stop all motion of the cyclist'
     } );
 
+    const labelFactory = ( text: string ) => () => new Text( text, { font: font } );
     const bicycleColorRadioButtonGroup = new VerticalAquaRadioButtonGroup( model.cyclist.bicycleColorShiftProperty, [
-      {
-        value: BLUE_COLOR_SHIFT,
-        createNode: () => new Text( 'Blue', { font: font } )
-      },
-      {
-        value: GREEN_COLOR_SHIFT,
-        createNode: () => new Text( 'Green', { font: font } )
-      },
-      {
-        value: RED_COLOR_SHIFT,
-        createNode: () => new Text( 'Red', { font: font } )
-      }
+      { value: BLUE_COLOR_SHIFT, createNode: labelFactory( 'Blue' ) },
+      { value: GREEN_COLOR_SHIFT, createNode: labelFactory( 'Green' ) },
+      { value: RED_COLOR_SHIFT, createNode: labelFactory( 'Red' ) }
     ], {
       labelTagName: 'h3',
       accessibleName: 'Bicycle Color',
