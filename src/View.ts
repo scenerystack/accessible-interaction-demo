@@ -90,7 +90,6 @@ export class View extends Node {
       font: 'bold 18px Arial'
     } );
     const accelerationSlider = new HSlider( model.accelerationProperty, new Range( -3, 3 ), {
-      // TODO: use preferred sizes instead
       trackSize: new Dimension2( 200, 5 ),
       thumbTouchAreaYDilation: 7,
       accessibleName: 'Acceleration',

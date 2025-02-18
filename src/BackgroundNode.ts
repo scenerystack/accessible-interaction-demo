@@ -120,11 +120,8 @@ export class BackgroundNode extends Node {
 
       const probabilityOfTree = 0.2;
 
-      // TODO
       const nearY = 4;
-      // const farY = 410;
       const farY = 700;
-      // const farY = 1400;
 
       // x: screen space, y: 0 (close) to 1 (far)
       const trees: { x: number; y: number; depth: number; type: number }[] = [];
