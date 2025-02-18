@@ -243,6 +243,10 @@ export class CyclistNode extends Node {
     cyclist.isPointingRightProperty.link( isPointingRight => {
       containerNode.matrix = isPointingRight ? Matrix3.X_REFLECTION : Matrix3.IDENTITY;
     } );
+
+    // NOTE: put here so we can keep it out of the way of a11y tutorial code.
+    const cyclistOffset = this.bottom;
+    this.y = -cyclistOffset;
   }
 
   public static mapAngleToImageIndex( angle: number ) {

@@ -2,10 +2,11 @@ import { AnimatedPanZoomListener, Font, HBox, Node, Text, VBox } from 'sceneryst
 import { Model } from './Model';
 import { CyclistNode } from './CyclistNode';
 import { Multilink, TReadOnlyProperty } from 'scenerystack/axon';
-import { Bounds2, Dimension2, Range, toFixed } from 'scenerystack/dot';
-import { HSlider, Panel, TextPushButton, VerticalAquaRadioButtonGroup } from 'scenerystack/sun';
+import { Bounds2, Dimension2, toFixed } from 'scenerystack/dot';
+import { Panel, TextPushButton, VerticalAquaRadioButtonGroup } from 'scenerystack/sun';
 import { BackgroundNode } from './BackgroundNode.js';
 import { BLUE_COLOR_SHIFT, GREEN_COLOR_SHIFT, RED_COLOR_SHIFT } from './Cyclist.js';
+import { AccelerationSlider } from './AccelerationSlider.js';
 
 export class View extends Node {
   public constructor(
@@ -18,25 +19,22 @@ export class View extends Node {
       labelContent: 'Accessible Interaction Demo'
     } );
 
-    const descriptionNode = new Node();
+    const font = Font.fromCSS( '18px Arial' );
+    const boldFont = Font.fromCSS( 'bold 18px Arial' );
 
-    descriptionNode.tagName = 'p';
-    descriptionNode.innerContent = 'There is a cyclist on a road. You can control the acceleration of the cyclist using a slider. There is a stop button to stop the cyclist.';
-
-    const backgroundNode = new BackgroundNode( model.positionProperty, layoutBoundsProperty );
-
-    const cyclistNode = new CyclistNode( model.cyclist );
-    const cyclistOffset = cyclistNode.bottom;
-    cyclistNode.y = -cyclistOffset;
-
-    model.cyclist.isPointingRightProperty.lazyLink( isPointingRight => {
-      cyclistNode.alertDescriptionUtterance( `The cyclist is now pointing to the ${isPointingRight ? 'right' : 'left'}` );
+    const descriptionNode = new Node( {
+      tagName: 'p',
+      innerContent: 'There is a cyclist on a road. You can control the acceleration of the cyclist using a slider. There is a stop button to stop the cyclist.'
     } );
 
-    cyclistNode.mutate( {
+    const cyclistNode = new CyclistNode( model.cyclist, {
       tagName: 'p',
       labelTagName: 'h2',
       labelContent: 'Cyclist'
+    } );
+
+    model.cyclist.isPointingRightProperty.lazyLink( isPointingRight => {
+      cyclistNode.alertDescriptionUtterance( `The cyclist is now pointing to the ${isPointingRight ? 'right' : 'left'}` );
     } );
 
     new Multilink( [
@@ -86,10 +84,7 @@ export class View extends Node {
       cyclistNode.innerContent = `The cyclist is on a ${color} bicycle pointing to the ${direction}. ${speed > 1e-5 ? `The cyclist is ${effortString}. ` : ''}The cyclist is ${velocityString}`;
     } );
 
-    const accelerationSliderLabel = new Text( 'Acceleration', {
-      font: 'bold 18px Arial'
-    } );
-    const accelerationSlider = new HSlider( model.accelerationProperty, new Range( -3, 3 ), {
+    const accelerationSlider = new AccelerationSlider( model.accelerationProperty, {
       trackSize: new Dimension2( 200, 5 ),
       thumbTouchAreaYDilation: 7,
       accessibleName: 'Acceleration',
@@ -97,12 +92,8 @@ export class View extends Node {
       pdomCreateAriaValueText: value => `${toFixed( value / 2, 1 )} meters per second squared`
     } );
 
-    accelerationSlider.addMinorTick( -3 );
-    accelerationSlider.addMinorTick( 0 );
-    accelerationSlider.addMinorTick( 3 );
-
     const stopButton = new TextPushButton( 'Stop', {
-      font: Font.fromCSS( '20px Arial' ),
+      font: font,
       listener: () => {
         model.stop();
 
@@ -112,25 +103,18 @@ export class View extends Node {
       accessibleHelpText: 'Stop all motion of the cyclist'
     } );
 
-    const bicycleColorLabelNode = new Text( 'Bicycle Color', {
-      font: 'bold 18px Arial'
-    } );
-
-    const bicycleColorTextOptions = {
-      font: '18px Arial'
-    };
     const bicycleColorRadioButtonGroup = new VerticalAquaRadioButtonGroup( model.cyclist.bicycleColorShiftProperty, [
       {
         value: BLUE_COLOR_SHIFT,
-        createNode: () => new Text( 'Blue', bicycleColorTextOptions )
+        createNode: () => new Text( 'Blue', { font: font } )
       },
       {
         value: GREEN_COLOR_SHIFT,
-        createNode: () => new Text( 'Green', bicycleColorTextOptions )
+        createNode: () => new Text( 'Green', { font: font } )
       },
       {
         value: RED_COLOR_SHIFT,
-        createNode: () => new Text( 'Red', bicycleColorTextOptions )
+        createNode: () => new Text( 'Red', { font: font } )
       }
     ], {
       labelTagName: 'h3',
@@ -140,16 +124,16 @@ export class View extends Node {
     } );
 
     const controlsNode = new Panel( new HBox( {
+      spacing: 30,
+      align: 'top',
       tagName: 'div',
       labelTagName: 'h2',
       labelContent: 'Controls',
-      spacing: 30,
-      align: 'top',
       children: [
         new VBox( {
           spacing: 7,
           children: [
-            accelerationSliderLabel,
+            new Text( 'Acceleration', { font: boldFont } ),
             accelerationSlider,
             stopButton
           ]
@@ -157,7 +141,7 @@ export class View extends Node {
         new VBox( {
           spacing: 7,
           children: [
-            bicycleColorLabelNode,
+            new Text( 'Bicycle Color', { font: boldFont } ),
             bicycleColorRadioButtonGroup
           ]
         } )
@@ -176,7 +160,7 @@ export class View extends Node {
 
     this.children = [
       descriptionNode,
-      backgroundNode,
+      new BackgroundNode( model.positionProperty, layoutBoundsProperty ),
       containerNode
     ];
 
