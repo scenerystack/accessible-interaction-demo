@@ -2,9 +2,7 @@ import { enableAssert } from "scenerystack/assert";
 import { BooleanProperty, Property } from "scenerystack/axon";
 import { Bounds2 } from "scenerystack/dot";
 import { asyncLoader, platform } from "scenerystack/phet-core";
-import { Display, Node, Rectangle, Text } from "scenerystack/scenery";
-import { CyclistNode } from './CyclistNode.js';
-import { Cyclist } from "./Cyclist.js";
+import { Display, Node } from "scenerystack/scenery";
 import { Model } from './Model.js';
 import { View } from './View.js';
 
