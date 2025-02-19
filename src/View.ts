@@ -37,12 +37,6 @@ export class View extends Node {
     public model: Model,
     layoutBoundsProperty: TReadOnlyProperty<Bounds2>
   ) {
-    super( {
-      tagName: 'div',
-      labelTagName: 'h1',
-      labelContent: 'Accessible Interaction Demo'
-    } );
-
     const font = Font.fromCSS( '18px Arial' );
     const boldFont = Font.fromCSS( 'bold 18px Arial' );
 
@@ -167,18 +161,23 @@ export class View extends Node {
       xMargin: 20
     } );
 
-    const containerNode = new Node( {
+    const scaledNode = new Node( {
       children: [
         cyclistNode,
         controlsNode
       ]
     } );
 
-    this.children = [
-      descriptionNode,
-      new BackgroundNode( model.positionProperty, layoutBoundsProperty ),
-      containerNode
-    ];
+    super( {
+      tagName: 'div',
+      labelTagName: 'h1',
+      labelContent: 'Accessible Interaction Demo',
+      children: [
+        descriptionNode,
+        new BackgroundNode( model.positionProperty, layoutBoundsProperty ),
+        scaledNode
+      ]
+    } );
 
     const zoomListener = new AnimatedPanZoomListener( this, {
       maxScale: 10
@@ -189,8 +188,8 @@ export class View extends Node {
     // Center the text and the rectangle dynamically
     layoutBoundsProperty.link( ( bounds ) => {
       const scale = bounds.height / 500;
-      containerNode.setScaleMagnitude( bounds.height / 500 );
-      containerNode.y = ( bounds.top + 3 * bounds.bottom ) / 4;
+      scaledNode.setScaleMagnitude( bounds.height / 500 );
+      scaledNode.y = ( bounds.top + 3 * bounds.bottom ) / 4;
       cyclistNode.centerX = bounds.centerX / scale;
       controlsNode.centerX = bounds.centerX / scale;
 

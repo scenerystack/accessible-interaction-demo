@@ -23,13 +23,18 @@ const rootNode = new Node( {
   renderer: 'svg'
 } );
 
+const interactiveHighlightsEnabledProperty = new BooleanProperty( true );
+
+// @ts-expect-error - Expose this on Window so it can be controlled
+window.interactiveHighlightsEnabledProperty = interactiveHighlightsEnabledProperty;
+
 // Display will render the scene graph to the DOM
 const display = new Display(rootNode, {
   allowSceneOverflow: false,
   backgroundColor: "#eee",
   listenToOnlyElement: false,
   assumeFullWindow: true,
-  interactiveHighlightsEnabledProperty: new BooleanProperty( true )
+  interactiveHighlightsEnabledProperty: interactiveHighlightsEnabledProperty
 });
 
 // We'll add the automatically-created DOM element to the body.
