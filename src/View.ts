@@ -8,6 +8,30 @@ import { BackgroundNode } from './BackgroundNode.js';
 import { BLUE_COLOR_SHIFT, GREEN_COLOR_SHIFT, RED_COLOR_SHIFT } from './Cyclist.js';
 import { AccelerationSlider } from './AccelerationSlider.js';
 
+// @ts-expect-error Exporting this for the demo hooks
+window.ViewTypes = {
+  AnimatedPanZoomListener: AnimatedPanZoomListener,
+  Font: Font,
+  HBox: HBox,
+  Node: Node,
+  Text: Text,
+  VBox: VBox,
+  Model: Model,
+  CyclistNode: CyclistNode,
+  Multilink: Multilink,
+  Bounds2: Bounds2,
+  Dimension2: Dimension2,
+  toFixed: toFixed,
+  Panel: Panel,
+  TextPushButton: TextPushButton,
+  VerticalAquaRadioButtonGroup: VerticalAquaRadioButtonGroup,
+  BackgroundNode: BackgroundNode,
+  BLUE_COLOR_SHIFT: BLUE_COLOR_SHIFT,
+  GREEN_COLOR_SHIFT: GREEN_COLOR_SHIFT,
+  RED_COLOR_SHIFT: RED_COLOR_SHIFT,
+  AccelerationSlider: AccelerationSlider
+};
+
 export class View extends Node {
   public constructor(
     public model: Model,
