@@ -1,5 +1,5 @@
 import { enableAssert } from "scenerystack/assert";
-import { BooleanProperty, Property } from "scenerystack/axon";
+import { BooleanProperty, Property, TinyEmitter } from "scenerystack/axon";
 import { Bounds2 } from "scenerystack/dot";
 import { asyncLoader, platform } from "scenerystack/phet-core";
 import { Display, Node } from "scenerystack/scenery";
@@ -38,6 +38,9 @@ document.body.appendChild(display.domElement);
 // Attach event listeners to the DOM.
 display.initializeEvents();
 
+// @ts-expect-error - Make this available globally, so external hooks for pdom/alerts can access it
+window.display = display;
+
 // Lazy resizing logic
 let resizePending = true;
 const resize = () => {
@@ -61,12 +64,29 @@ window.visualViewport &&
   window.visualViewport.addEventListener("resize", resizeListener);
 resize();
 
+let ViewClass: typeof View = View;
+const viewClassChangedEmitter = new TinyEmitter();
+
+// @ts-expect-error - Allow replacement of the view class, for live code updates
+window.setViewClass = (newViewClass: typeof View) => {
+  ViewClass = newViewClass;
+  viewClassChangedEmitter.emit();
+};
+
 // Wait for images to complete loading
 asyncLoader.addListener( () => {
-  const model = new Model();
-  const view = new View( model, layoutBoundsProperty );
+
+  let model = new Model();
+  let view = new ViewClass( model, layoutBoundsProperty );
 
   rootNode.addChild( view );
+
+  viewClassChangedEmitter.addListener( () => {
+    model = model.copy();
+    view.dispose();
+    view = new ViewClass( model, layoutBoundsProperty );
+    rootNode.addChild( view );
+  } );
 
   // Frame step logic
   display.updateOnRequestAnimationFrame((dt) => {

@@ -17,6 +17,22 @@ export class Model {
     } );
   }
 
+  public copy(): Model {
+    const copy = new Model();
+
+    copy.positionProperty.value = this.positionProperty.value;
+    copy.velocityProperty.value = this.velocityProperty.value;
+    copy.accelerationProperty.value = this.accelerationProperty.value;
+
+    copy.cyclist.isPointingRightProperty.value = this.cyclist.isPointingRightProperty.value;
+    copy.cyclist.wheelAngleProperty.value = this.cyclist.wheelAngleProperty.value;
+    copy.cyclist.crankAngleProperty.value = this.cyclist.crankAngleProperty.value;
+    copy.cyclist.effortProperty.value = this.cyclist.effortProperty.value;
+    copy.cyclist.bicycleColorShiftProperty.value = this.cyclist.bicycleColorShiftProperty.value;
+
+    return copy;
+  }
+
   public step( dt: number ): void {
     // Do not allow the app to run too fast, or for it to run a ton when
     // finally made visible.
