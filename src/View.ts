@@ -99,7 +99,7 @@ export class View extends Node {
         velocityString = 'moving very quickly';
       }
 
-      cyclistNode.innerContent = `The cyclist is on a ${color} bicycle pointing to the ${direction}. ${speed > 1e-5 ? `The cyclist is ${effortString}. ` : ''}The cyclist is ${velocityString}`;
+      cyclistNode.innerContent = `The cyclist is on a ${color} bicycle pointing to the ${direction}. ${speed > 1e-5 ? `The cyclist is ${effortString}. ` : ''}The cyclist is ${velocityString}.`;
     } );
 
     const accelerationSlider = new AccelerationSlider( model.accelerationProperty, {
