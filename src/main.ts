@@ -104,3 +104,5 @@ asyncLoader.addListener( () => {
 
   // display.setPointerAreaDisplayVisible( true );
 } );
+
+asyncLoader.stageComplete();
