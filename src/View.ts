@@ -107,7 +107,7 @@ export class View extends Node {
       thumbTouchAreaYDilation: 7,
       accessibleName: 'Acceleration',
       accessibleHelpText: 'Adjust the acceleration of the cyclist',
-      pdomCreateAriaValueText: value => `${toFixed( value / 2, 1 )} meters per second squared`
+      createAriaValueText: value => `${toFixed( value / 2, 1 )} meters per second squared`
     } );
 
     const stopButton = new TextPushButton( 'Stop', {
